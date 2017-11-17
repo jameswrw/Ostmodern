@@ -28,6 +28,9 @@ final class SetViewController : UIViewController {
     /// The movies set data
     fileprivate var data : Results<Movie>?
     
+    //!!!!
+    let realm = try! Realm()
+    
     /**
      Setup the view
      */
@@ -39,6 +42,9 @@ final class SetViewController : UIViewController {
         
         /// Call to setup the data
         self.setupData()
+        
+        /// Setup the table data source.
+        tblView?.dataSource = self
     }
     
     /**
@@ -49,7 +55,7 @@ final class SetViewController : UIViewController {
     func setupLoading (isLoading : Bool) {
         UIView.animate(withDuration: 0.3, delay: 0.0, options: .beginFromCurrentState, animations: {
             self.activity?.alpha = isLoading ? 1.0 : 0.0
-            self.tblView?.alpha = isLoading ? 0.0 : 1.0
+            self.activity?.alpha = isLoading ? 0.0 : 1.0
         }) { (_) in }
     }
     
@@ -61,7 +67,17 @@ final class SetViewController : UIViewController {
         let api = API.instance
         api.getSets { (success, sets) in
             // Update UI.
-            print("\(sets)")
+            if sets != nil {
+                for set in sets! {
+                    let movie = Movie.initMovie(from: set)
+                    print("\(movie)")
+                    
+                    try! self.realm.write {
+                        self.realm.add(movie)
+                    }
+                }
+            }
+            self.tblView?.reloadData()
         }
     }
 }
@@ -77,7 +93,9 @@ extension SetViewController : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        
+        data = realm.objects(Movie.self)
+        return (data != nil) ? data!.count : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
