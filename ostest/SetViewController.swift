@@ -26,7 +26,7 @@ final class SetViewController : UIViewController {
   let log = SwiftyBeaver.self
   
   /// The movies set data
-  private var data : Results<Movie>?
+  fileprivate var data : Results<Movie>?
   
   /**
    Setup the view
