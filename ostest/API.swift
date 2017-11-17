@@ -23,7 +23,7 @@ class API {
   let log = SwiftyBeaver.self
   
   /// The base URL
-  let baseURL = "http://featore-code-test.skylurk-cms.qa.aws.ostmodern.co.uk:8080"
+  let baseURL = "http://feature-code-test.skylark-cms.qa.aws.ostmodern.co.uk:8000"
   
   /**
    Get sets
