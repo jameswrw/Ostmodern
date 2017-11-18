@@ -7,9 +7,11 @@
 //
 
 import Foundation
+import Alamofire
 import AlamofireImage
 import RealmSwift
 import SwiftyBeaver
+import SwiftyJSON
 
 /**
  Shows the list of Sets
@@ -28,8 +30,8 @@ final class SetViewController : UIViewController {
     /// The movies set data
     fileprivate var data : Results<Movie>?
     
-    //!!!!
-    let realm = try! Realm()
+    ///!!!!
+    fileprivate let realm = try! Realm()
     
     /**
      Setup the view
@@ -70,7 +72,6 @@ final class SetViewController : UIViewController {
             if sets != nil {
                 for set in sets! {
                     let movie = Movie.initMovie(from: set)
-                    print("\(movie)")
                     
                     try! self.realm.write {
                         self.realm.add(movie)
@@ -108,17 +109,40 @@ extension SetViewController : UITableViewDataSource {
         /// Set the data
         if let data = self.data?[indexPath.row] {
             
+            let api = API.instance
+
             /// Background image
+            //!!!! Move this stuff out of the view controller.
             if let urlString = data.imageURLs.first?.url,
-                let url = URL(string: urlString) {
-                cell.imgBackground?.af_setImage(withURL: url)
+                let url = URL(string: api.baseURL + urlString) {
+//                var urlRequest = URLRequest(url: url)
+//                urlRequest.setValue("image/jpeg", forHTTPHeaderField: "Content-type")
+                
+                Alamofire.request(url.absoluteString).responseJSON { response in
+                    print("\(response)")
+                    
+                    if let httpResponse = response.response {
+                        //!!!! Use a proper constant.
+                        if httpResponse.statusCode == 200 {
+                            // Perhaps value! is a bit fast and loose, but I'm assuming that an HTML 200 code means we're good to go...
+                            let json = JSON(response.result.value!)
+                            guard let imageURLString = json["url"].rawString(),
+                                let imageURL = URL(string: imageURLString) else {return}
+                            
+                            cell.imgBackground?.af_setImage(withURL: imageURL) { (response) in
+                                cell.imgBackground?.image = response.value
+//                                print("\(response)")
+                            }
+                        }
+                    }
+                }
             }
             
             /// Title
             cell.lblTitle?.text = data.title
             
             /// Description
-            cell.txtDescription?.text = data.summary
+            cell.txtDescription?.text = data.setDescription
             
         }
         
