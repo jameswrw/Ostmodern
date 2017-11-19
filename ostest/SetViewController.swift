@@ -61,9 +61,11 @@ final class SetViewController : UIViewController {
      - parameter isLoading
      */
     func setupLoading (isLoading : Bool) {
+        
+        isLoading ? self.activity?.startAnimating() : self.activity?.stopAnimating()
+        
         UIView.animate(withDuration: 0.3, delay: 0.0, options: .beginFromCurrentState, animations: {
             self.activity?.alpha = isLoading ? 1.0 : 0.0
-            self.activity?.alpha = isLoading ? 0.0 : 1.0
         }) { (_) in }
     }
     
