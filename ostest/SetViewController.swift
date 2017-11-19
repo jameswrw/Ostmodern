@@ -36,9 +36,6 @@ final class SetViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        /// Start afresh.
-        database.eraseAll()
-        
         /// Setup view for loading
         self.setupLoading(isLoading: true)
         
@@ -123,14 +120,13 @@ extension SetViewController : UITableViewDataSource {
                 cell.imgBackground?.af_setImage(withURL: imageURL) { (response) in
                 }
             }
-            
-            /// Title
-            cell.lblTitle?.text = movie.title
-            
-            /// Description
-            cell.txtDescription?.text = movie.summary
-            
         }
+        
+        /// Title
+        cell.lblTitle?.text = movie.title
+        
+        /// Description
+        cell.txtDescription?.text = movie.summary
         
         /// Return the cell
         return cell
@@ -152,6 +148,10 @@ extension SetViewController : UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let details = storyboard?.instantiateViewController(withIdentifier: "DetailsViewController") as! DetailsViewController
         navigationController?.pushViewController(details, animated: true)
+        
+        let movies = database.movies()
+        let movie = movies[indexPath.row]
+        details.movie = movie
     }
 }
 

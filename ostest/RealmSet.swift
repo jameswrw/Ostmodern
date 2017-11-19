@@ -51,7 +51,13 @@ class Movie : Object {
     
     return movie
   }
-  
+
+    /**
+     Set uid as Movie's primmary key. This lets us avoid adding duplicates.
+     */
+    override static func primaryKey() -> String? {
+        return "uid"
+    }
 }
 
 /**

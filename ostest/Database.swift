@@ -31,7 +31,7 @@ class Database {
     
     func add(movie: Movie) {
         try? realm.write {
-            realm.add(movie)
+            realm.add(movie, update: true)
         }
     }
     
