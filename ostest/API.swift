@@ -57,6 +57,29 @@ class API {
     }
     
     /**
+     The image URLs in a Movie actually point to a block of json that contains the actual image URL.
+     Return that URL via the completion handler.
+     */
+    func retrieveImageURLFrom(url: String, completion: @escaping (_ url: URL)->Void) {
+        
+        if let url = URL(string: baseURL + url) {
+            Alamofire.request(url.absoluteString).responseJSON { response in
+                
+                if let httpResponse = response.response {
+                    if httpResponse.statusCode == self.kHTTPSuccess {
+                        // Perhaps value! is a bit fast and loose, but I'm assuming that an HTML 200 code means we're good to go...
+                        let json = JSON(response.result.value!)
+                        guard let imageURLString = json["url"].rawString(),
+                            let imageURL = URL(string: imageURLString) else {return}
+                        
+                        completion(imageURL)
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
      Updates an APISet object from the /sets/ endpoint to a full formed APISet with correct images
      
      - parameter set: The APISet to convert

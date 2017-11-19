@@ -27,11 +27,8 @@ final class SetViewController : UIViewController {
     /// Log
     let log = SwiftyBeaver.self
     
-    /// The movies set data
-    fileprivate var data : Results<Movie>?
-    
-    ///!!!!
-    fileprivate let realm = try! Realm()
+    // Movie database.
+    fileprivate let database = Database.instance
     
     /**
      Setup the view
@@ -40,9 +37,7 @@ final class SetViewController : UIViewController {
         super.viewDidLoad()
         
         /// Start afresh.
-        realm.beginWrite()
-        realm.deleteAll()
-        try? realm.commitWrite()
+        database.eraseAll()
         
         /// Setup view for loading
         self.setupLoading(isLoading: true)
@@ -80,13 +75,12 @@ final class SetViewController : UIViewController {
         let api = API.instance
         api.getSets { (success, sets) in
             // Update UI.
+            self.setupLoading(isLoading: false)
+
             if sets != nil {
                 for set in sets! {
                     let movie = Movie.initMovie(from: set)
-                    
-                    try? self.realm.write {
-                        self.realm.add(movie)
-                    }
+                    self.database.add(movie: movie)
                 }
             }
             self.tblView?.reloadData()
@@ -106,8 +100,8 @@ extension SetViewController : UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        data = realm.objects(Movie.self)
-        return (data != nil) ? data!.count : 0
+        let movies = database.movies()
+        return movies.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -118,42 +112,21 @@ extension SetViewController : UITableViewDataSource {
         }
         
         /// Set the data
-        if let data = self.data?[indexPath.row] {
-            
-            let api = API.instance
-
-            /// Background image
-            //!!!! Move this stuff out of the view controller.
-            if let urlString = data.imageURLs.first?.url,
-                let url = URL(string: api.baseURL + urlString) {
-//                var urlRequest = URLRequest(url: url)
-//                urlRequest.setValue("image/jpeg", forHTTPHeaderField: "Content-type")
-                
-                Alamofire.request(url.absoluteString).responseJSON { response in
-                    print("\(response)")
-                    
-                    if let httpResponse = response.response {
-                        //!!!! Use a proper constant.
-                        if httpResponse.statusCode == 200 {
-                            // Perhaps value! is a bit fast and loose, but I'm assuming that an HTML 200 code means we're good to go...
-                            let json = JSON(response.result.value!)
-                            guard let imageURLString = json["url"].rawString(),
-                                let imageURL = URL(string: imageURLString) else {return}
-                            
-                            cell.imgBackground?.af_setImage(withURL: imageURL) { (response) in
-                                cell.imgBackground?.image = response.value
-//                                print("\(response)")
-                            }
-                        }
-                    }
+        let movies = database.movies()
+        let movie = movies[indexPath.row]
+        
+        /// Background image
+        if let urlString = movie.imageURLs.first?.url {
+            API.instance.retrieveImageURLFrom(url: urlString) { (imageURL) in
+                cell.imgBackground?.af_setImage(withURL: imageURL) { (response) in
                 }
             }
             
             /// Title
-            cell.lblTitle?.text = data.title
+            cell.lblTitle?.text = movie.title
             
             /// Description
-            cell.txtDescription?.text = data.setDescription
+            cell.txtDescription?.text = movie.summary
             
         }
         
@@ -165,7 +138,6 @@ extension SetViewController : UITableViewDataSource {
         /// Default
         return 180.0
     }
-    
 }
 
 
@@ -175,6 +147,7 @@ extension SetViewController : UITableViewDataSource {
 extension SetViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {        
 
+        tableView.deselectRow(at: indexPath, animated: true)
         let details = storyboard?.instantiateViewController(withIdentifier: "DetailsViewController") as! DetailsViewController
         navigationController?.pushViewController(details, animated: true)
     }
