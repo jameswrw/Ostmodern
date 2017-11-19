@@ -12,8 +12,7 @@ class DetailsViewController: UIViewController {
 
     @IBOutlet private weak var movieTitle: UILabel?
     @IBOutlet private weak var movieDescription: UITextView?
-    @IBOutlet private weak var image1: UIImageView?
-    @IBOutlet private weak var image2: UIImageView?
+    @IBOutlet private weak var images: UITableView?
     
     var movie: Movie?
     
@@ -21,28 +20,12 @@ class DetailsViewController: UIViewController {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
+        images?.dataSource = self
+        images?.delegate = self
+        
         if movie != nil {
             movieTitle?.text = movie!.title
             movieDescription?.text = movie!.setDescription
-            
-            // This is a bit cheesy. Might want to progrmatically create image views instead.
-            for index in 0...1 {
-
-                var imageView: UIImageView?
-                if index == 0 {
-                    imageView = image1
-                } else {
-                    imageView = image2
-                }
-                
-                if index < movie!.imageURLs.count {
-                    let urlString = movie!.imageURLs[index].url
-                    API.instance.retrieveImageURLFrom(url: urlString) { (imageURL) in
-                        imageView?.af_setImage(withURL: imageURL) { (response) in
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -50,15 +33,50 @@ class DetailsViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+}
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+// MARK: Image table data source.
+extension DetailsViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return movie?.imageURLs.count ?? 0
     }
-    */
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        /// Get the cell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: DetailImageViewCell.identifier) as? DetailImageViewCell else {
+            return UITableViewCell()
+        }
+        
+        if movie != nil {
+            let urlString = movie!.imageURLs[indexPath.row].url
+            API.instance.retrieveImageURLFrom(url: urlString) { (imageURL) in
+                cell.imgBackground?.af_setImage(withURL: imageURL) { (response) in
+                    // Once we get the image, reszie the cell to fit.
+                    let image = response.value
+                    if image != nil {
+                        var imageWidth = image!.size.width
+                        var imageHeight = image!.size.height
+                        let screenWidth = UIScreen.main.bounds.width
+                        
+                        // Make sure the image isn't wider than the screen.
+                        if imageWidth > screenWidth {
+                            imageWidth = screenWidth
+                            imageHeight = imageHeight * screenWidth / imageWidth
+                        }
 
+                        cell.bounds = CGRect(x: 0, y: 0, width: imageWidth, height: imageHeight)
+                    }
+                }
+            }
+        }
+        return cell
+    }
+}
+
+// MARK: Image table delegate.
+extension DetailsViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        /// Default
+        return 180.0
+    }
 }

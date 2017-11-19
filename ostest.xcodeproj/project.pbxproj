@@ -22,6 +22,7 @@
 		00A3E24A1E649A67002482EE /* ostestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A3E2491E649A67002482EE /* ostestUITests.swift */; };
 		139374CF792B15DB829089CE /* Pods_ostest_ostestUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B951A46AB1EA30E1292E23A /* Pods_ostest_ostestUITests.framework */; };
 		36922D211FC1CA440020A35E /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36922D201FC1CA440020A35E /* DetailsViewController.swift */; };
+		36922D231FC242C90020A35E /* DetailImageViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36922D221FC242C90020A35E /* DetailImageViewCell.swift */; };
 		4BFB92DBBD4E96782A86EB30 /* Pods_ostest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7BF28D9EE44448429931BC8 /* Pods_ostest.framework */; };
 		ACC3CF098F399C5E3F527863 /* Pods_ostest_ostestTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F756F1915AE0240733C896DE /* Pods_ostest_ostestTests.framework */; };
 /* End PBXBuildFile section */
@@ -66,6 +67,7 @@
 		1917A0C96A8826354AA5DBF1 /* Pods-ostest-ostestTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ostest-ostestTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ostest-ostestTests/Pods-ostest-ostestTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2B951A46AB1EA30E1292E23A /* Pods_ostest_ostestUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ostest_ostestUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36922D201FC1CA440020A35E /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		36922D221FC242C90020A35E /* DetailImageViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailImageViewCell.swift; sourceTree = "<group>"; };
 		3A9500227F4973B51371FF74 /* Pods-ostest-ostestTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ostest-ostestTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ostest-ostestTests/Pods-ostest-ostestTests.release.xcconfig"; sourceTree = "<group>"; };
 		3F4787B16C76CAFF93B9AC72 /* Pods-ostest-ostestUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ostest-ostestUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ostest-ostestUITests/Pods-ostest-ostestUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		97C2584A38F140E42F9ED0C0 /* Pods-ostest-ostestUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ostest-ostestUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ostest-ostestUITests/Pods-ostest-ostestUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				0025DE0A1E65D8A4005C7363 /* SetViewCell.swift */,
+				36922D221FC242C90020A35E /* DetailImageViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -559,6 +562,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				006314741E657A3100431015 /* API.swift in Sources */,
+				36922D231FC242C90020A35E /* DetailImageViewCell.swift in Sources */,
 				006314761E657A3B00431015 /* Database.swift in Sources */,
 				006314791E657DED00431015 /* APISet.swift in Sources */,
 				36922D211FC1CA440020A35E /* DetailsViewController.swift in Sources */,
