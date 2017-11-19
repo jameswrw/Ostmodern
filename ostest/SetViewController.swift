@@ -127,6 +127,12 @@ extension SetViewController : UITableViewDataSource {
         
         /// Description
         cell.txtDescription?.text = movie.summary
+
+        /// Set favourite status.
+        cell.btnFavourite?.setOn(movie.favourite, animated: false)
+        
+        /// Set id.
+        cell.movieID = movie.uid
         
         /// Return the cell
         return cell

@@ -30,9 +30,26 @@ class Database {
     }
     
     func add(movie: Movie) {
-        try? realm.write {
-            realm.add(movie, update: true)
+
+        let movies = self.movies()
+        let matches = movies.filter("uid == %@", movie.uid)
+        
+        // Don't add a movie if it's already in the database.
+        if matches.count == 0 {
+            try? realm.write {
+                realm.add(movie)
+            }
         }
+    }
+    
+    func setFavouriteStatusFor(movieWithID uid: String, isFavourite favourite: Bool) {
+        let movies = self.movies()
+        let matches = movies.filter("uid == %@", uid)
+        
+        // uid is the primary key, so we should find exactly one thing.
+        realm.beginWrite()
+        matches[0].favourite = favourite
+        try? realm.commitWrite()
     }
     
     func movies()->Results<Movie> {

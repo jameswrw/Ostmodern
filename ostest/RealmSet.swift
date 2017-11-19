@@ -25,6 +25,8 @@ class Movie : Object {
   
   dynamic var summary : String = ""
   
+  dynamic var favourite: Bool = false
+    
   var imageURLs = List<Image>()
   
   

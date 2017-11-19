@@ -29,7 +29,9 @@ class SetViewCell : UITableViewCell {
   /// Favourite
   @IBOutlet weak var btnFavourite : UISwitch?
 
+    var movieID : String?
+    
     @IBAction func favourite(sender: UISwitch) {
-        print("Fave!")
+        Database.instance.setFavouriteStatusFor(movieWithID: movieID!, isFavourite: sender.isOn)
     }
 }
