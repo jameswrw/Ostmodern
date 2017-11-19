@@ -27,7 +27,9 @@ class SetViewCell : UITableViewCell {
   @IBOutlet weak var txtDescription : UITextView?
   
   /// Favourite
-  @IBOutlet weak var btnFavourite : UIButton?
+  @IBOutlet weak var btnFavourite : UISwitch?
 
-  
+    @IBAction func favourite(sender: UISwitch) {
+        print("Fave!")
+    }
 }

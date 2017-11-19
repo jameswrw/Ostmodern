@@ -39,6 +39,11 @@ final class SetViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        /// Start afresh.
+        realm.beginWrite()
+        realm.deleteAll()
+        try? realm.commitWrite()
+        
         /// Setup view for loading
         self.setupLoading(isLoading: true)
         
@@ -47,6 +52,12 @@ final class SetViewController : UIViewController {
         
         /// Setup the table data source.
         tblView?.dataSource = self
+        
+        /// Setup the table delegate.
+        tblView?.delegate = self
+        
+        // Setup the navigation controller delegate.
+        self.navigationController?.delegate = self
     }
     
     /**
@@ -73,7 +84,7 @@ final class SetViewController : UIViewController {
                 for set in sets! {
                     let movie = Movie.initMovie(from: set)
                     
-                    try! self.realm.write {
+                    try? self.realm.write {
                         self.realm.add(movie)
                     }
                 }
@@ -162,5 +173,23 @@ extension SetViewController : UITableViewDataSource {
  Table view delegate
  */
 extension SetViewController : UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {        
+
+        let details = storyboard?.instantiateViewController(withIdentifier: "DetailsViewController") as! DetailsViewController
+        navigationController?.pushViewController(details, animated: true)
+    }
+}
+
+/**
+ Navigation controller delegate
+ */
+extension SetViewController : UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        // Show the navigation bar, unless it we are showing the root view, i.e. self.
+        if viewController == self {
+            navigationController.isNavigationBarHidden = true
+        } else {
+            navigationController.isNavigationBarHidden = false
+        }
+    }
 }
