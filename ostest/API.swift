@@ -19,6 +19,9 @@ class API {
     /// Singleton instance
     static let instance = API()
     
+    // Don't let callers use the default init method.
+    private init() {}
+    
     /// Log
     let log = SwiftyBeaver.self
     

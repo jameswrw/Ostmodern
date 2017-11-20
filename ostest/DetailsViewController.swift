@@ -47,6 +47,7 @@ extension DetailsViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
+        // Get the cell's background image.
         if movie != nil {
             let urlString = movie!.imageURLs[indexPath.row].url
             API.instance.retrieveImageURLFrom(url: urlString) { (imageURL) in
@@ -76,7 +77,7 @@ extension DetailsViewController: UITableViewDataSource {
 // MARK: Image table delegate.
 extension DetailsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        /// Default
+        /// Default - the cell will get resized once we have the image dimensions.
         return 180.0
     }
 }

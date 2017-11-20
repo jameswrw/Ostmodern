@@ -768,7 +768,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ostermodern.ostestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ostest.app/ostest";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ostmodern.app/Ostmodern";
 			};
 			name = Debug;
 		};
@@ -783,7 +783,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ostermodern.ostestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ostest.app/ostest";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ostmodern.app/Ostmodern";
 			};
 			name = Release;
 		};
