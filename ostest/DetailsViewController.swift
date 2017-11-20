@@ -14,6 +14,9 @@ class DetailsViewController: UIViewController {
     @IBOutlet private weak var movieDescription: UITextView?
     @IBOutlet private weak var images: UITableView?
     
+    fileprivate var cellImages = [String : UIImage]()
+    fileprivate let defaultImageHeight = 180.0 as CGFloat
+    
     var movie: Movie?
     
     override func viewDidLoad() {
@@ -49,25 +52,32 @@ extension DetailsViewController: UITableViewDataSource {
         
         // Get the cell's background image.
         if movie != nil {
+            
+            // If we've already downloaded the image, just set it to be the cell's background image.
+            // Otherwise download and store it, then force the table to call heightForRowAt.
             let urlString = movie!.imageURLs[indexPath.row].url
-            API.instance.retrieveImageURLFrom(url: urlString) { (imageURL) in
-                cell.imgBackground?.af_setImage(withURL: imageURL) { (response) in
-                    // Once we get the image, reszie the cell to fit.
-                    let image = response.value
-                    if image != nil {
-                        var imageWidth = image!.size.width
-                        var imageHeight = image!.size.height
-                        let screenWidth = UIScreen.main.bounds.width
+            let image = cellImages[urlString]
+            if image == nil {
+                
+                API.instance.retrieveImageURLFrom(url: urlString) { (imageURL) in
+                    cell.imgBackground?.af_setImage(withURL: imageURL) { (response) in
+                        // Once we get the image, resize the cell to fit.
+                        let indexPaths = [indexPath]
+                        tableView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
                         
-                        // Make sure the image isn't wider than the screen.
-                        if imageWidth > screenWidth {
-                            imageWidth = screenWidth
-                            imageHeight = imageHeight * screenWidth / imageWidth
-                        }
+                        let image = response.value
+                        if image != nil {
 
-                        cell.bounds = CGRect(x: 0, y: 0, width: imageWidth, height: imageHeight)
+                            self.cellImages[urlString] = image
+
+                            // This forces the table to call heightForRowAt.
+                            // Now we have the image, it can return the proper height.
+                            tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+                        }
                     }
                 }
+            } else {
+                cell.imgBackground?.image = image
             }
         }
         return cell
@@ -77,7 +87,14 @@ extension DetailsViewController: UITableViewDataSource {
 // MARK: Image table delegate.
 extension DetailsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        /// Default - the cell will get resized once we have the image dimensions.
-        return 180.0
+        
+        // First time in we won't have downloaded the image, so we can't return a good value.
+        // cellForRowAt: will download the image, and cause this to be called again.
+        // Second time round we have the image, so can return the proper height.
+        guard let urlString = movie?.imageURLs[indexPath.row].url,
+            let image = cellImages[urlString] else {return defaultImageHeight}
+        
+        // Return the height after sizing to fill the screen width, preserving the aspect ratio.
+        return UIScreen.main.bounds.width / image.size.width * image.size.height
     }
 }
