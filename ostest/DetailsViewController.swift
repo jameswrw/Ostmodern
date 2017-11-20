@@ -60,12 +60,16 @@ extension DetailsViewController: UITableViewDataSource {
             if image == nil {
                 
                 API.instance.retrieveImageURLFrom(url: urlString) { (imageURL) in
-                    cell.imgBackground?.af_setImage(withURL: imageURL) { (response) in
-                        // Once we get the image, resize the cell to fit.
-                        let indexPaths = [indexPath]
-                        tableView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.automatic)
+                    cell.imgBackground?.af_setImage(withURL: imageURL) { (response) in                        
+                        var image = response.value
                         
-                        let image = response.value
+                        // I came across instances where response.value was nil, but there was image
+                        // data in response.data. So try that if we didn't get an image when looking
+                        // at response.value.
+                        if image == nil {
+                            image = UIImage(data: response.data!)
+                        }
+                        
                         if image != nil {
 
                             self.cellImages[urlString] = image

@@ -118,6 +118,13 @@ extension SetViewController : UITableViewDataSource {
         if let urlString = movie.imageURLs.first?.url {
             API.instance.retrieveImageURLFrom(url: urlString) { (imageURL) in
                 cell.imgBackground?.af_setImage(withURL: imageURL) { (response) in
+                    var image = response.value
+                    if image == nil && response.data != nil {
+                        image = UIImage(data: response.data!)
+                        if image != nil {
+                            cell.imgBackground?.image = image!
+                        }
+                    }
                 }
             }
         }
