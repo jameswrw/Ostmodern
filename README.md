@@ -18,8 +18,14 @@ Obvioulsy the git log will give you an idea of how I set about the problem. Ther
 
 I noticed on the set view, there are items that have a title, and very little else. i.e. no description or images associated with them. I wasn't entirely sure what these represented. I ended up just displaying them using what they had. In the real world, I would have liked to ask for some clarification.
 
-The project builds with one warning. Usually I like to get rid of them all, but in this case it's just a nag to use Swift 4, but the specification is clear that this is a Swift 3 project, so I wasn't going to change this. Although Swift 4's JSONDecoder might put SwiftyJSON out of work...
-
 Finally, there's obviously a bit of a disconnect between making something production ready, and spending a suggested few hours on it. I hope I achieved the right balance.
 
+To build:
+git clone https://github.com/jameswrw/Ostmodern.git
+pod update
+open ostest.xcworkspace, and build the ostest target.
+
+The project builds with one warning. Usually I like to get rid of them all, but in this case it's just a nag to use Swift 4, but the specification is clear that this is a Swift 3 project, so I wasn't going to change this. Although Swift 4's JSONDecoder might put SwiftyJSON out of work... (There may be a second warning. Again it's a nag. This time to upgrade the Pods project to the latest settings.)
+
 James
+
