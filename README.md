@@ -10,9 +10,9 @@ So, I spent part of the weekend getting the Ostmodern test app in better shape t
 6. Once it built, and more or less behaved, I moved on to adding features, such as the details view.
 7. Test, and fix issues as they arose.
 
-One challenge was having to deal with quite a bit of unfamiliar code. Not just Ostmodern itself, but also the third party projects, such as Alamofire, Realm and SwiftyJSON. It was worth gaining some level of understanding, as existing code certainly saved a lot of effort going from JSON to an object graph for example.
+I hope the detail view is what was asked for. It displays all the data associated with the item, rather than just the synopsis displayed in the set view. On startup the app will show the home sets. Tapping on an item in the table view will push a detail view with more information onto the navigation stack. The user can favourite items from the main sets view, and the favourites are persisted across sessions.
 
-I hope the detail view is what was asked for. It displays all the data associated with the item, rather than just the synopsis displayed in the set view.
+One challenge was having to deal with quite a bit of unfamiliar code. Not just Ostmodern itself, but also the third party projects, such as Alamofire, Realm and SwiftyJSON. It was worth gaining some level of understanding, as existing code certainly saved a lot of effort going from JSON to an object graph for example.
 
 Obvioulsy the git log will give you an idea of how I set about the problem. There are a couple of times where code was written quickly in a convenient location, and then moved somewhere more architecturally desireable. I think this is fair enough when you want to try and understand how an unfamiliar class or method works. The realm code being used in a view controller, before being encapsulated in the Database class being a case in point.
 
