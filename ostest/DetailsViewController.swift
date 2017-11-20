@@ -14,6 +14,7 @@ class DetailsViewController: UIViewController {
     @IBOutlet private weak var movieDescription: UITextView?
     @IBOutlet private weak var images: UITableView?
     
+    // Dictionary of urls to images. Used to see if we've already downloaded an image.
     fileprivate var cellImages = [String : UIImage]()
     fileprivate let defaultImageHeight = 180.0 as CGFloat
     
